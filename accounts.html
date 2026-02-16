@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unix Bank - Accounts</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>🏦 Unix Bank</h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link" title="Dashboard">📊 Dashboard</a>
+                <a href="accounts.html" class="nav-link active" title="Manage Accounts">💳 Accounts</a>
+                <a href="transactions.html" class="nav-link" title="Deposits & Withdrawals">💰 Transactions</a>
+                <a href="transfer.html" class="nav-link" title="Transfer Money">🔄 Transfer</a>
+                <a href="settings.html" class="nav-link" title="Settings">⚙️ Settings</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="page-header">
+            <div>
+                <h2 class="page-title">Account Management</h2>
+                <p class="page-subtitle">Create, manage, and track all your banking accounts</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="showCreateForm()">+ Create New Account</button>
+            </div>
+        </header>
+
+        <div id="alertContainer"></div>
+
+        <!-- Create Account Form (Initially Hidden) -->
+        <div class="card" id="createAccountCard" style="display: none;">
+            <div class="card-header">
+                <h3>Create New Account</h3>
+                <p class="card-subtitle">Set up a new banking account with your preferred type</p>
+                <button class="close-btn" onclick="hideCreateForm()">×</button>
+            </div>
+            <div class="card-body">
+                <form id="createAccountForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Account Holder Name *</label>
+                            <input type="text" id="holderName" placeholder="e.g., John Doe" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Account Type *</label>
+                            <select id="accountType" required onchange="updateAccountTypeInfo()">
+                                <option value="basic">💎 Basic Account</option>
+                                <option value="savings">🏦 Savings Account</option>
+                                <option value="checking">🏧 Checking Account</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Initial Deposit (₹)</label>
+                            <input type="number" id="initialDeposit" placeholder="0.00" min="0" step="0.01" value="0">
+                        </div>
+                        
+                        <div class="form-group" id="interestRateGroup" style="display: none;">
+                            <label>Interest Rate (%)</label>
+                            <input type="number" id="interestRate" placeholder="2.0" min="0" max="100" step="0.1" value="2.0">
+                        </div>
+                        
+                        <div class="form-group" id="overdraftGroup" style="display: none;">
+                            <label>Overdraft Limit (₹)</label>
+                            <input type="number" id="overdraftLimit" placeholder="1000.00" min="0" step="10" value="1000">
+                        </div>
+                    </div>
+
+                    <div class="account-type-info" id="accountTypeInfo">
+                        <h4>💎 Basic Account</h4>
+                        <p>A standard account with basic deposit and withdrawal features. No interest earned, no overdraft protection.</p>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">Create Account</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideCreateForm()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Filter and Sort Controls -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Filter & Search</h3>
+            </div>
+            <div class="card-body">
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label>Account Type:</label>
+                        <select id="filterType" onchange="filterAccounts()">
+                            <option value="all">All Accounts</option>
+                            <option value="Basic">💎 Basic</option>
+                            <option value="Savings">🏦 Savings</option>
+                            <option value="Checking">🏧 Checking</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Sort by:</label>
+                        <select id="sortBy" onchange="sortAccounts()">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="balance-high">Highest Balance</option>
+                            <option value="balance-low">Lowest Balance</option>
+                            <option value="name">Name (A-Z)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="search-group">
+                        <input type="text" id="searchAccount" placeholder="🔍 Search by name or account number..." onkeyup="searchAccounts()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accounts Grid -->
+        <section class="accounts-section">
+            <div class="accounts-grid" id="accountsGrid">
+                <div class="empty-state-large">
+                    <div class="empty-state-icon">🏦</div>
+                    <h3>No Accounts Yet</h3>
+                    <p>Create your first account to start banking with Unix Bank</p>
+                    <button class="btn btn-primary" onclick="showCreateForm()">Create Your First Account</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Account Details Modal -->
+    <div id="accountModal" class="modal">
+        <div class="modal-content modal-large">
+            <button class="modal-close" onclick="closeAccountModal()">×</button>
+            <div id="accountDetails"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Unix Bank. All rights reserved.</p>
+            <p class="footer-subtitle">A secure, professional banking system</p>
+        </div>
+    </footer>
+
+    <script src="bank.js"></script>
+    <script src="accounts.js"></script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unix Bank - Transfer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>🏦 Unix Bank</h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link" title="Dashboard">📊 Dashboard</a>
+                <a href="accounts.html" class="nav-link" title="Manage Accounts">💳 Accounts</a>
+                <a href="transactions.html" class="nav-link" title="Deposits & Withdrawals">💰 Transactions</a>
+                <a href="transfer.html" class="nav-link active" title="Transfer Money">🔄 Transfer</a>
+                <a href="settings.html" class="nav-link" title="Settings">⚙️ Settings</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="page-header">
+            <div>
+                <h2 class="page-title">Transfer Funds</h2>
+                <p class="page-subtitle">Move money securely between your accounts instantly</p>
+            </div>
+        </header>
+
+        <div id="alertContainer"></div>
+
+        <div class="two-col-grid">
+            <!-- Transfer Form -->
+            <section class="transfer-form-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🔄 Transfer Money</h3>
+                        <p class="card-subtitle">Enter transfer details below</p>
+                    </div>
+                    <div class="card-body">
+                        <form id="transferForm">
+                            <div class="transfer-flow">
+                                <div class="transfer-step">
+                                    <div class="step-number">1</div>
+                                    <div class="form-group">
+                                        <label>From Account *</label>
+                                        <select id="transferFrom" required>
+                                            <option value="">Select source account...</option>
+                                        </select>
+                                        <div class="account-balance-hint" id="fromBalance"></div>
+                                    </div>
+                                </div>
+
+                                <div class="transfer-arrow">→</div>
+
+                                <div class="transfer-step">
+                                    <div class="step-number">2</div>
+                                    <div class="form-group">
+                                        <label>To Account *</label>
+                                        <select id="transferTo" required>
+                                            <option value="">Select destination account...</option>
+                                        </select>
+                                        <div class="account-balance-hint" id="toBalance"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="transfer-step">
+                                <div class="step-number">3</div>
+                                <div class="form-group">
+                                    <label>Transfer Amount (₹) *</label>
+                                    <input type="number" id="transferAmount" placeholder="0.00" min="0.01" step="0.01" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Note (Optional)</label>
+                                <input type="text" id="transferNote" placeholder="e.g., Savings for vacation">
+                            </div>
+
+                            <div class="transfer-preview" id="transferPreview" style="display: none;">
+                                <h4>✓ Transfer Summary</h4>
+                                <div class="preview-row">
+                                    <div class="preview-col">
+                                        <div class="preview-label">From Account</div>
+                                        <div class="preview-value" id="previewFromAccount">-</div>
+                                        <div class="preview-balance">
+                                            <span>Current: <span id="previewFromCurrent">₹0.00</span></span>
+                                            <span>After: <span id="previewFromAfter" class="negative">₹0.00</span></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="preview-arrow">→</div>
+
+                                    <div class="preview-col">
+                                        <div class="preview-label">To Account</div>
+                                        <div class="preview-value" id="previewToAccount">-</div>
+                                        <div class="preview-balance">
+                                            <span>Current: <span id="previewToCurrent">₹0.00</span></span>
+                                            <span>After: <span id="previewToAfter" class="positive">₹0.00</span></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-large">
+                                🔄 Execute Transfer
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transfer Info & Recent Transfers -->
+            <section class="transfer-info-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>💡 How It Works</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-box">
+                            <h4>Transfer Features</h4>
+                            <ul>
+                                <li><strong>⚡ Instant:</strong> Transfers processed immediately</li>
+                                <li><strong>💰 No Fees:</strong> Free between your accounts</li>
+                                <li><strong>🔒 Secure:</strong> Encrypted & logged</li>
+                                <li><strong>📏 Flexible:</strong> Any amount, anytime</li>
+                            </ul>
+                        </div>
+
+                        <div class="info-box info-box-success">
+                            <h4>✅ Safe & Secure</h4>
+                            <p>All transfers are encrypted and completely logged. You can view your complete transfer history anytime in your dashboard.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <h3>🔄 Recent Transfers</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="recentTransfers">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">🔄</div>
+                                <p>No transfers yet</p>
+                                <small>Your transfers will appear here</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Transfer Statistics -->
+        <section class="transfer-stats-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3>📊 Transfer Statistics</h3>
+                    <p class="card-subtitle">Overview of your transfer activity</p>
+                </div>
+                <div class="card-body">
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-label">Total Transfers</div>
+                            <div class="stat-value" id="totalTransferCount">0</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-label">Total Amount</div>
+                            <div class="stat-value" id="totalTransferAmount">₹0.00</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-label">Average Transfer</div>
+                            <div class="stat-value" id="avgTransferAmount">₹0.00</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-label">This Month</div>
+                            <div class="stat-value" id="monthTransferCount">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Unix Bank. All rights reserved.</p>
+            <p class="footer-subtitle">A secure, professional banking system</p>
+        </div>
+    </footer>
+
+    <script src="bank.js"></script>
+    <script src="transfer.js"></script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unix Bank - Settings</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>🏦 Unix Bank</h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link" title="Dashboard">📊 Dashboard</a>
+                <a href="accounts.html" class="nav-link" title="Manage Accounts">💳 Accounts</a>
+                <a href="transactions.html" class="nav-link" title="Deposits & Withdrawals">💰 Transactions</a>
+                <a href="transfer.html" class="nav-link" title="Transfer Money">🔄 Transfer</a>
+                <a href="settings.html" class="nav-link active" title="Settings">⚙️ Settings</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="page-header">
+            <div>
+                <h2 class="page-title">Settings & Tools</h2>
+                <p class="page-subtitle">Manage your preferences, data, and banking operations</p>
+            </div>
+        </header>
+
+        <div id="alertContainer"></div>
+
+        <!-- Settings Cards Row 1 -->
+        <section class="settings-section">
+            <div class="two-col-grid">
+                <!-- Apply Interest -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📈 Apply Interest</h3>
+                        <p class="card-subtitle">Earn interest on savings accounts</p>
+                    </div>
+                    <div class="card-body">
+                        <p>Calculate and apply interest to all your savings accounts based on their individual interest rates.</p>
+                        
+                        <div class="savings-list" id="savingsList"></div>
+
+                        <button class="btn btn-primary btn-large" onclick="applyInterest()">
+                            📈 Apply Interest
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Export Data -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📊 Export Data</h3>
+                        <p class="card-subtitle">Download your banking data</p>
+                    </div>
+                    <div class="card-body">
+                        <p>Export your accounts and transactions for backup or external use.</p>
+                        
+                        <div class="export-options">
+                            <button class="btn btn-secondary" onclick="exportAccounts()">
+                                📄 Accounts (JSON)
+                            </button>
+                            <button class="btn btn-secondary" onclick="exportTransactions()">
+                                📝 Transactions (JSON)
+                            </button>
+                            <button class="btn btn-secondary" onclick="exportComplete()">
+                                💾 Complete Data
+                            </button>
+                        </div>
+
+                        <div class="info-box" style="margin-top: 16px;">
+                            <h4>📦 Export Format</h4>
+                            <p style="margin: 0; font-size: 0.9rem;">JSON format includes all details, balances, and transaction history.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Import Data Section -->
+        <section class="import-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3>📥 Import Data</h3>
+                    <p class="card-subtitle">Restore from backup</p>
+                </div>
+                <div class="card-body">
+                    <p>Restore your banking data from a previously exported file.</p>
+                    
+                    <div class="import-section-controls">
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                        <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">
+                            📁 Choose File to Import
+                        </button>
+                        <span id="importFileName" style="margin-left: 15px; color: var(--text-dim);">No file selected</span>
+                    </div>
+
+                    <button class="btn btn-primary" style="margin-top: 15px; display: none;" id="confirmImportBtn" onclick="confirmImport()">
+                        ✓ Import Data
+                    </button>
+
+                    <div class="info-box info-box-warning">
+                        <h4>⚠️ Warning</h4>
+                        <p>Importing data will replace all current accounts and transactions. Export your current data first if needed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Information -->
+        <section class="system-info-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3>ℹ️ System Information</h3>
+                    <p class="card-subtitle">Your banking system details</p>
+                </div>
+                <div class="card-body">
+                    <div class="system-info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Version</div>
+                            <div class="info-value">1.0.0</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Total Accounts</div>
+                            <div class="info-value" id="totalAccountsInfo">0</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Total Transactions</div>
+                            <div class="info-value" id="totalTransInfo">0</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">System Balance</div>
+                            <div class="info-value" id="totalBalanceInfo">₹0.00</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Data Size</div>
+                            <div class="info-value" id="storageUsed">0 KB</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Storage Type</div>
+                            <div class="info-value">Browser Local</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Demo Mode Section -->
+        <section class="demo-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3>🎮 Demo Mode</h3>
+                    <p class="card-subtitle">Load sample data for testing</p>
+                </div>
+                <div class="card-body">
+                    <p>Load pre-populated sample data to test the system with demo accounts and transactions.</p>
+                    
+                    <button class="btn btn-primary" onclick="createDemoData()">
+                        🎮 Load Demo Data
+                    </button>
+
+                    <div class="info-box" style="margin-top: 16px;">
+                        <h4>📝 Demo Includes</h4>
+                        <ul style="margin: 8px 0 0 20px; padding: 0;">
+                            <li>3 sample accounts (Basic, Savings, Checking)</li>
+                            <li>Various sample transactions</li>
+                            <li>Pre-calculated interest</li>
+                            <li>Transfer history</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Management (Danger Zone) -->
+        <section class="danger-section">
+            <div class="card card-danger">
+                <div class="card-header">
+                    <h3>🗑️ Data Management</h3>
+                    <p class="card-subtitle">Danger Zone - Irreversible Actions</p>
+                </div>
+                <div class="card-body">
+                    <p><strong>Warning:</strong> These actions cannot be undone. Make sure to export your data first!</p>
+                    
+                    <div class="danger-actions">
+                        <button class="btn btn-danger" onclick="clearAllData()">
+                            🗑️ Clear All Data
+                        </button>
+                    </div>
+
+                    <div class="info-box info-box-warning" style="margin-top: 16px;">
+                        <h4>⚠️ Permanent Action</h4>
+                        <p>Clearing data will permanently delete all accounts, transactions, and settings. This cannot be undone.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3>ℹ️ About Unix Bank</h3>
+                    <p class="card-subtitle">Project information & technologies</p>
+                </div>
+                <div class="card-body">
+                    <h4>🏦 Banking System Demo</h4>
+                    <p>A demonstration banking platform showcasing object-oriented programming concepts, including:</p>
+                    
+                    <ul>
+                        <li><strong>Classes & Inheritance:</strong> BankAccount, SavingsAccount, CheckingAccount</li>
+                        <li><strong>Exception Handling:</strong> Custom error handling for banking operations</li>
+                        <li><strong>Data Persistence:</strong> LocalStorage for data management</li>
+                        <li><strong>Responsive Design:</strong> Mobile, tablet, and desktop support</li>
+                    </ul>
+
+                    <div class="tech-stack">
+                        <h4>🛠️ Built With</h4>
+                        <div class="tech-badges">
+                            <span class="tech-badge">HTML5</span>
+                            <span class="tech-badge">CSS3</span>
+                            <span class="tech-badge">JavaScript ES6+</span>
+                            <span class="tech-badge">LocalStorage API</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Unix Bank. All rights reserved.</p>
+            <p class="footer-subtitle">A secure, professional banking system</p>
+        </div>
+    </footer>
+
+    <script src="bank.js"></script>
+    <script src="settings.js"></script>
+</body>
+</html>

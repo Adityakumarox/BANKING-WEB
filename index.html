@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNIX BANK - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>UNIX BANK</h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link active">Dashboard</a>
+                <a href="accounts.html" class="nav-link">Accounts</a>
+                <a href="transactions.html" class="nav-link">Transactions</a>
+                <a href="transfer.html" class="nav-link">Transfer</a>
+                <a href="settings.html" class="nav-link">Settings</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="page-header">
+            <div>
+                <h2 class="page-title">Dashboard</h2>
+                <p class="page-subtitle">Welcome back! Here's your banking overview</p>
+            </div>
+        </header>
+
+        <div id="alertContainer"></div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-row">
+            <div class="stat-card-large">
+                <div class="stat-icon">💰</div>
+                <div class="stat-content">
+                    <div class="stat-label">Total Balance</div>
+                    <div class="stat-value" id="totalBalance">₹0.00</div>
+                    <div class="stat-change positive">+0% from last month</div>
+                </div>
+            </div>
+            
+            <div class="stat-card-large">
+                <div class="stat-icon">🏦</div>
+                <div class="stat-content">
+                    <div class="stat-label">Active Accounts</div>
+                    <div class="stat-value" id="totalAccounts">0</div>
+                    <div class="stat-change">Across all types</div>
+                </div>
+            </div>
+            
+            <div class="stat-card-large">
+                <div class="stat-icon">📈</div>
+                <div class="stat-content">
+                    <div class="stat-label">Total Interest Earned</div>
+                    <div class="stat-value" id="totalInterest">₹0.00</div>
+                    <div class="stat-change positive">This month</div>
+                </div>
+            </div>
+            
+            <div class="stat-card-large">
+                <div class="stat-icon">🔄</div>
+                <div class="stat-content">
+                    <div class="stat-label">Transactions</div>
+                    <div class="stat-value" id="totalTransactions">0</div>
+                    <div class="stat-change">Last 30 days</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Quick Actions</h3>
+            </div>
+            <div class="card-body">
+                <div class="action-grid">
+                    <a href="accounts.html" class="action-card">
+                        <div class="action-icon">➕</div>
+                        <div class="action-title">Create Account</div>
+                        <div class="action-desc">Open a new banking account</div>
+                    </a>
+                    
+                    <a href="transactions.html?action=deposit" class="action-card">
+                        <div class="action-icon">💸</div>
+                        <div class="action-title">Deposit Money</div>
+                        <div class="action-desc">Add funds to your account</div>
+                    </a>
+                    
+                    <a href="transactions.html?action=withdraw" class="action-card">
+                        <div class="action-icon">💰</div>
+                        <div class="action-title">Withdraw</div>
+                        <div class="action-desc">Take money from your account</div>
+                    </a>
+                    
+                    <a href="transfer.html" class="action-card">
+                        <div class="action-icon">🔄</div>
+                        <div class="action-title">Transfer</div>
+                        <div class="action-desc">Move money between accounts</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity & Account Summary -->
+        <div class="two-col-grid">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Recent Activity</h3>
+                    <a href="transactions.html" class="view-all-link">View All →</a>
+                </div>
+                <div class="card-body">
+                    <div id="recentActivity">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📝</div>
+                            <p>No recent activity</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Your Accounts</h3>
+                    <a href="accounts.html" class="view-all-link">View All →</a>
+                </div>
+                <div class="card-body">
+                    <div id="accountsSummary">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🏦</div>
+                            <p>No accounts yet</p>
+                            <a href="accounts.html" class="btn btn-primary" style="margin-top: 15px;">Create Account</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Type Distribution -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Account Distribution</h3>
+            </div>
+            <div class="card-body">
+                <div class="distribution-grid" id="accountDistribution">
+                    <div class="distribution-item">
+                        <div class="distribution-bar">
+                            <div class="distribution-fill" style="width: 0%; background: var(--primary);"></div>
+                        </div>
+                        <div class="distribution-label">
+                            <span>Basic Accounts</span>
+                            <span id="basicCount">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-item">
+                        <div class="distribution-bar">
+                            <div class="distribution-fill" style="width: 0%; background: var(--secondary);"></div>
+                        </div>
+                        <div class="distribution-label">
+                            <span>Savings Accounts</span>
+                            <span id="savingsCount">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-item">
+                        <div class="distribution-bar">
+                            <div class="distribution-fill" style="width: 0%; background: var(--warning);"></div>
+                        </div>
+                        <div class="distribution-label">
+                            <span>Checking Accounts</span>
+                            <span id="checkingCount">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Unix Bank © 2026 | Secure Banking System</p>
+    </footer>
+
+    <script src="bank.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>

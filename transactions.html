@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unix Bank - Transactions</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>🏦 Unix Bank</h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link" title="Dashboard">📊 Dashboard</a>
+                <a href="accounts.html" class="nav-link" title="Manage Accounts">💳 Accounts</a>
+                <a href="transactions.html" class="nav-link active" title="Deposits & Withdrawals">💰 Transactions</a>
+                <a href="transfer.html" class="nav-link" title="Transfer Money">🔄 Transfer</a>
+                <a href="settings.html" class="nav-link" title="Settings">⚙️ Settings</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="page-header">
+            <div>
+                <h2 class="page-title">Transactions</h2>
+                <p class="page-subtitle">Deposit, withdraw, and view your transaction history</p>
+            </div>
+        </header>
+
+        <div id="alertContainer"></div>
+
+        <!-- Transaction Type Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('deposit')">💸 Deposit</button>
+            <button class="tab-btn" onclick="switchTab('withdraw')">💵 Withdraw</button>
+            <button class="tab-btn" onclick="switchTab('history')">📜 History</button>
+        </div>
+
+        <!-- Deposit Tab -->
+        <div class="tab-content active" id="depositTab">
+            <div class="two-col-grid">
+                <section class="deposit-form-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Make a Deposit</h3>
+                            <p class="card-subtitle">Add funds to your account</p>
+                        </div>
+                        <div class="card-body">
+                            <form id="depositForm">
+                                <div class="form-group">
+                                    <label>Select Account *</label>
+                                    <select id="depositAccount" required>
+                                        <option value="">Choose an account...</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Amount (₹) *</label>
+                                    <input type="number" id="depositAmount" placeholder="0.00" min="0.01" step="0.01" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Note (Optional)</label>
+                                    <input type="text" id="depositNote" placeholder="e.g., Salary deposit">
+                                </div>
+
+                                <div class="account-preview" id="depositPreview" style="display: none;">
+                                    <h4>✓ Account Preview</h4>
+                                    <div class="preview-info">
+                                        <span>Current Balance:</span>
+                                        <span id="depositCurrentBalance">₹0.00</span>
+                                    </div>
+                                    <div class="preview-info">
+                                        <span>After Deposit:</span>
+                                        <span id="depositNewBalance" class="highlight">₹0.00</span>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-large">
+                                    💰 Deposit Money
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="quick-deposit-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Quick Amounts</h3>
+                            <p class="card-subtitle">Popular deposit amounts</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-amounts">
+                                <button class="quick-amount-btn" onclick="setDepositAmount(50)">₹50</button>
+                                <button class="quick-amount-btn" onclick="setDepositAmount(100)">₹100</button>
+                                <button class="quick-amount-btn" onclick="setDepositAmount(250)">₹250</button>
+                                <button class="quick-amount-btn" onclick="setDepositAmount(500)">₹500</button>
+                                <button class="quick-amount-btn" onclick="setDepositAmount(1000)">₹1,000</button>
+                                <button class="quick-amount-btn" onclick="setDepositAmount(2500)">₹2,500</button>
+                            </div>
+
+                            <div class="info-box">
+                                <h4>💡 Deposit Details</h4>
+                                <ul style="margin: 8px 0 0 20px; padding: 0;">
+                                    <li>Funds added instantly</li>
+                                    <li>No fees applied</li>
+                                    <li>Min: ₹0.01</li>
+                                    <li>All account types</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Withdraw Tab -->
+        <div class="tab-content" id="withdrawTab">
+            <div class="two-col-grid">
+                <section class="withdraw-form-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Make a Withdrawal</h3>
+                            <p class="card-subtitle">Withdraw funds from your account</p>
+                        </div>
+                        <div class="card-body">
+                            <form id="withdrawForm">
+                                <div class="form-group">
+                                    <label>Select Account *</label>
+                                    <select id="withdrawAccount" required>
+                                        <option value="">Choose an account...</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Amount (₹) *</label>
+                                    <input type="number" id="withdrawAmount" placeholder="0.00" min="0.01" step="0.01" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Note (Optional)</label>
+                                    <input type="text" id="withdrawNote" placeholder="e.g., ATM withdrawal">
+                                </div>
+
+                                <div class="account-preview" id="withdrawPreview" style="display: none;">
+                                    <h4>✓ Account Preview</h4>
+                                    <div class="preview-info">
+                                        <span>Current Balance:</span>
+                                        <span id="withdrawCurrentBalance">₹0.00</span>
+                                    </div>
+                                    <div class="preview-info">
+                                        <span>Available (with overdraft):</span>
+                                        <span id="withdrawAvailable">₹0.00</span>
+                                    </div>
+                                    <div class="preview-info">
+                                        <span>After Withdrawal:</span>
+                                        <span id="withdrawNewBalance" class="highlight">₹0.00</span>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-secondary btn-large">
+                                    💸 Withdraw Money
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="quick-withdraw-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Quick Amounts</h3>
+                            <p class="card-subtitle">Popular withdrawal amounts</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-amounts">
+                                <button class="quick-amount-btn" onclick="setWithdrawAmount(20)">₹20</button>
+                                <button class="quick-amount-btn" onclick="setWithdrawAmount(50)">₹50</button>
+                                <button class="quick-amount-btn" onclick="setWithdrawAmount(100)">₹100</button>
+                                <button class="quick-amount-btn" onclick="setWithdrawAmount(200)">₹200</button>
+                                <button class="quick-amount-btn" onclick="setWithdrawAmount(500)">₹500</button>
+                                <button class="quick-amount-btn" onclick="setWithdrawAmount(1000)">₹1,000</button>
+                            </div>
+
+                            <div class="info-box info-box-warning">
+                                <h4>⚠️ Withdrawal Limits</h4>
+                                <ul style="margin: 8px 0 0 20px; padding: 0;">
+                                    <li><strong>Basic & Savings:</strong> No overdraft</li>
+                                    <li><strong>Checking:</strong> Overdraft available</li>
+                                    <li>Processed instantly</li>
+                                    <li>Min: ₹0.01</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- History Tab -->
+        <div class="tab-content" id="historyTab">
+            <section class="history-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📜 Transaction History</h3>
+                        <p class="card-subtitle">View all your transactions</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="filter-bar">
+                            <div class="filter-group">
+                                <label>Account:</label>
+                                <select id="historyAccount" onchange="filterHistory()">
+                                    <option value="all">All Accounts</option>
+                                </select>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label>Type:</label>
+                                <select id="historyType" onchange="filterHistory()">
+                                    <option value="all">All Types</option>
+                                    <option value="DEPOSIT">💸 Deposits</option>
+                                    <option value="WITHDRAWAL">💵 Withdrawals</option>
+                                    <option value="TRANSFER">🔄 Transfers</option>
+                                    <option value="INTEREST">📈 Interest</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-group">
+                                <label>Period:</label>
+                                <select id="historyPeriod" onchange="filterHistory()">
+                                    <option value="all">All Time</option>
+                                    <option value="today">Today</option>
+                                    <option value="week">This Week</option>
+                                    <option value="month">This Month</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="transaction-list" id="transactionHistory">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📝</div>
+                                <p>No transactions found</p>
+                                <small>Your transactions will appear here</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Unix Bank. All rights reserved.</p>
+            <p class="footer-subtitle">A secure, professional banking system</p>
+        </div>
+    </footer>
+
+    <script src="bank.js"></script>
+    <script src="transactions.js"></script>
+</body>
+</html>
