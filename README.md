@@ -75,7 +75,7 @@ Add screenshots of:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/banking-management-system.git
+git clone https://github.com/Adityakumarox/banking-management-system.git
 ```
 
 2. Open the project folder:
